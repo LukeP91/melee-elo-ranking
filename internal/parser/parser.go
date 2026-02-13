@@ -152,10 +152,14 @@ func (p *Parser) convertRawMatchV2(raw RawMatchV2) Match {
 		return Match{}
 	}
 
+	// Use nickname hash as consistent player ID across tournaments
+	player1ID := hashString(raw.Team1)
+	player2ID := hashString(raw.Team2)
+
 	// Player 1 - use nickname (Team1) as display name for GDPR
 	comp1 := Competitor{
 		Player: Player{
-			ID:          raw.Team1Id,
+			ID:          player1ID,
 			DisplayName: raw.Team1,
 			Username:    raw.Team1,
 		},
@@ -166,7 +170,7 @@ func (p *Parser) convertRawMatchV2(raw RawMatchV2) Match {
 	// Player 2 - use nickname (Team2) as display name for GDPR
 	comp2 := Competitor{
 		Player: Player{
-			ID:          raw.Team2Id,
+			ID:          player2ID,
 			DisplayName: raw.Team2,
 			Username:    raw.Team2,
 		},
@@ -175,4 +179,13 @@ func (p *Parser) convertRawMatchV2(raw RawMatchV2) Match {
 	match.Competitors = append(match.Competitors, comp2)
 
 	return match
+}
+
+// hashString creates a consistent int64 hash from a string
+func hashString(s string) int64 {
+	h := int64(0)
+	for _, c := range s {
+		h = 31*h + int64(c)
+	}
+	return h
 }
