@@ -200,10 +200,10 @@ func (s *Storage) SaveMatch(match Match) error {
 
 func (s *Storage) GetRankings() ([]Ranking, error) {
 	query := `SELECT 
-			display_name, username, current_elo, matches_played, wins, losses
-		  FROM players 
-		  WHERE matches_played > 0
-		  ORDER BY current_elo DESC`
+		display_name, username, current_elo, matches_played, wins, losses
+	  FROM players 
+	  WHERE matches_played >= 10
+	  ORDER BY current_elo DESC`
 
 	rows, err := s.db.Query(query)
 	if err != nil {
