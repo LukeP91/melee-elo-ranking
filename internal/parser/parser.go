@@ -32,7 +32,7 @@ func New() *Parser {
 	return &Parser{}
 }
 
-func (p *Parser) ParseFile(filepath string) ([]Match, error) {
+func (p *Parser) ParseFile(filepath string, tournamentID int) ([]Match, error) {
 	data, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (p *Parser) ParseFile(filepath string) ([]Match, error) {
 	if err := json.Unmarshal(data, &rawMatchesV2); err == nil && len(rawMatchesV2) > 0 {
 		var matches []Match
 		for _, raw := range rawMatchesV2 {
-			match := p.convertRawMatchV2(raw)
+			match := p.convertRawMatchV2(raw, tournamentID)
 			if match.ID != "" {
 				matches = append(matches, match)
 			}
@@ -59,7 +59,7 @@ func (p *Parser) ParseFile(filepath string) ([]Match, error) {
 
 	var matches []Match
 	for _, raw := range rawMatches {
-		match := p.convertRawMatch(raw)
+		match := p.convertRawMatch(raw, tournamentID)
 		matches = append(matches, match)
 	}
 
@@ -103,10 +103,10 @@ type RawMatchV2 struct {
 	TimeExtensionMinutes *int   `json:"TimeExtensionMinutes"`
 }
 
-func (p *Parser) convertRawMatch(raw RawMatch) Match {
+func (p *Parser) convertRawMatch(raw RawMatch, tournamentID int) Match {
 	match := Match{
 		ID:           raw.Guid,
-		TournamentID: raw.TournamentId,
+		TournamentID: tournamentID,
 		RoundNumber:  raw.RoundNumber,
 		DateCreated:  raw.DateCreated,
 	}
@@ -136,13 +136,13 @@ func (p *Parser) convertRawMatch(raw RawMatch) Match {
 	return match
 }
 
-func (p *Parser) convertRawMatchV2(raw RawMatchV2) Match {
+func (p *Parser) convertRawMatchV2(raw RawMatchV2, tournamentID int) Match {
 	// Generate a unique ID from the match data
 	matchID := fmt.Sprintf("%d-%d-%d-%d", raw.PhaseId, raw.RoundNumber, raw.Team1Id, raw.Team2Id)
 
 	match := Match{
 		ID:           matchID,
-		TournamentID: raw.PhaseId,
+		TournamentID: tournamentID,
 		RoundNumber:  raw.RoundNumber,
 		DateCreated:  time.Now(), // No date in V2 format
 	}

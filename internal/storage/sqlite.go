@@ -26,18 +26,25 @@ type Player struct {
 }
 
 type Match struct {
-	ID               string
-	TournamentID     int
-	Round            int
-	Player1ID        int64
-	Player2ID        int64
-	Player1Wins      int
-	Player2Wins      int
-	DatePlayed       time.Time
-	Player1ELOBefore int
-	Player2ELOBefore int
-	Player1ELOAfter  int
-	Player2ELOAfter  int
+	ID                string
+	TournamentID      int
+	TournamentMeleeID int
+	Round             int
+	Player1ID         int64
+	Player2ID         int64
+	Player1Wins       int
+	Player2Wins       int
+	DatePlayed        time.Time
+	Player1ELOBefore  int
+	Player2ELOBefore  int
+	Player1ELOAfter   int
+	Player2ELOAfter   int
+}
+
+type Tournament struct {
+	ID      int64
+	MeleeID int
+	Date    time.Time
 }
 
 type Ranking struct {
@@ -75,6 +82,11 @@ func New(dbPath string) (*Storage, error) {
 		return nil, err
 	}
 
+	// Migrate existing data
+	if err := storage.migrateExistingData(); err != nil {
+		return nil, err
+	}
+
 	return storage, nil
 }
 
@@ -96,6 +108,12 @@ func (s *Storage) createTables() error {
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
+		`CREATE TABLE IF NOT EXISTS tournaments (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			melee_id INTEGER UNIQUE NOT NULL,
+			date DATETIME,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
 		`CREATE TABLE IF NOT EXISTS matches (
 			id TEXT PRIMARY KEY,
 			tournament_id INTEGER,
@@ -110,6 +128,7 @@ func (s *Storage) createTables() error {
 			player1_elo_after INTEGER,
 			player2_elo_after INTEGER,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY (tournament_id) REFERENCES tournaments(id),
 			FOREIGN KEY (player1_id) REFERENCES players(id),
 			FOREIGN KEY (player2_id) REFERENCES players(id)
 		)`,
@@ -124,6 +143,47 @@ func (s *Storage) createTables() error {
 	}
 
 	return nil
+}
+
+func (s *Storage) migrateExistingData() error {
+	// Check if we already have tournaments
+	var count int
+	err := s.db.QueryRow("SELECT COUNT(*) FROM tournaments").Scan(&count)
+	if err != nil {
+		return err
+	}
+
+	if count > 0 {
+		// Already migrated
+		return nil
+	}
+
+	// Get distinct tournament_ids from matches
+	rows, err := s.db.Query("SELECT DISTINCT tournament_id FROM matches")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	// Create a tournament for each unique tournament_id
+	for rows.Next() {
+		var tournamentID int
+		if err := rows.Scan(&tournamentID); err != nil {
+			return err
+		}
+
+		// Use tournament_id as melee_id with a default date
+		// We'll use a placeholder date - in the future this could be fetched from melee.gg
+		_, err = s.db.Exec(
+			"INSERT OR IGNORE INTO tournaments (melee_id, date) VALUES (?, datetime('2024-01-01'))",
+			tournamentID,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return rows.Err()
 }
 
 func (s *Storage) GetOrCreatePlayer(externalID int64, displayName, username string) (*Player, error) {
@@ -165,6 +225,20 @@ func (s *Storage) GetOrCreatePlayer(externalID int64, displayName, username stri
 	}, nil
 }
 
+func (s *Storage) GetPlayerByID(id int64) (*Player, error) {
+	var player Player
+	err := s.db.QueryRow(
+		"SELECT id, external_id, display_name, username, current_elo, matches_played, wins, losses, created_at, updated_at FROM players WHERE id = ?",
+		id,
+	).Scan(&player.ID, &player.ExternalID, &player.DisplayName, &player.Username, &player.CurrentELO, &player.MatchesPlayed, &player.Wins, &player.Losses, &player.CreatedAt, &player.UpdatedAt)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &player, nil
+}
+
 func (s *Storage) UpdatePlayerELO(playerID int64, newELO int, won bool) error {
 	query := `UPDATE players 
 			  SET current_elo = ?, 
@@ -184,6 +258,135 @@ func (s *Storage) UpdatePlayerELO(playerID int64, newELO int, won bool) error {
 
 	_, err := s.db.Exec(query, newELO, winInc, lossInc, playerID)
 	return err
+}
+
+func (s *Storage) GetOrCreateTournament(meleeID int, date time.Time) (*Tournament, error) {
+	var t Tournament
+	var datePtr *time.Time
+	err := s.db.QueryRow(
+		"SELECT id, melee_id, date FROM tournaments WHERE melee_id = ?",
+		meleeID,
+	).Scan(&t.ID, &t.MeleeID, &datePtr)
+
+	if err == nil {
+		if datePtr != nil {
+			t.Date = *datePtr
+		}
+		return &t, nil
+	}
+
+	if err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	// Handle zero time as null
+	if !date.IsZero() {
+		datePtr = &date
+	}
+
+	res, err := s.db.Exec(
+		"INSERT INTO tournaments (melee_id, date) VALUES (?, ?)",
+		meleeID, datePtr,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Tournament{
+		ID:      id,
+		MeleeID: meleeID,
+		Date:    date,
+	}, nil
+}
+
+func (s *Storage) GetTournamentByMeleeID(meleeID int) (*Tournament, error) {
+	var t Tournament
+	var datePtr *time.Time
+	err := s.db.QueryRow(
+		"SELECT id, melee_id, date FROM tournaments WHERE melee_id = ?",
+		meleeID,
+	).Scan(&t.ID, &t.MeleeID, &datePtr)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if datePtr != nil {
+		t.Date = *datePtr
+	}
+	return &t, nil
+}
+
+func (s *Storage) GetTournamentsWithMissingDates() ([]Tournament, error) {
+	rows, err := s.db.Query("SELECT id, melee_id, date FROM tournaments WHERE date IS NULL")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tournaments []Tournament
+	for rows.Next() {
+		var t Tournament
+		var datePtr *time.Time
+		if err := rows.Scan(&t.ID, &t.MeleeID, &datePtr); err != nil {
+			return nil, err
+		}
+		if datePtr != nil {
+			t.Date = *datePtr
+		}
+		tournaments = append(tournaments, t)
+	}
+	return tournaments, rows.Err()
+}
+
+func (s *Storage) UpdateTournamentDate(meleeID int, date time.Time) error {
+	_, err := s.db.Exec("UPDATE tournaments SET date = ? WHERE melee_id = ?", date, meleeID)
+	return err
+}
+
+func (s *Storage) ResetAllPlayersELO() error {
+	_, err := s.db.Exec("UPDATE players SET current_elo = 1500, matches_played = 0, wins = 0, losses = 0")
+	return err
+}
+
+func (s *Storage) GetAllMatchesSorted() ([]Match, error) {
+	query := `
+		SELECT m.id, m.tournament_id, m.round, m.player1_id, m.player2_id, 
+		       m.player1_wins, m.player2_wins, m.date_played, t.date as tournament_date
+		FROM matches m
+		JOIN tournaments t ON m.tournament_id = t.melee_id
+		ORDER BY COALESCE(t.date, '1970-01-01') ASC, m.tournament_id ASC, m.round ASC
+	`
+
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var matches []Match
+	for rows.Next() {
+		var m Match
+		var tournamentDatePtr *time.Time
+		err := rows.Scan(&m.ID, &m.TournamentID, &m.Round, &m.Player1ID, &m.Player2ID,
+			&m.Player1Wins, &m.Player2Wins, &m.DatePlayed, &tournamentDatePtr)
+		if err != nil {
+			return nil, err
+		}
+		if tournamentDatePtr != nil {
+			m.DatePlayed = *tournamentDatePtr
+		}
+		matches = append(matches, m)
+	}
+
+	return matches, rows.Err()
 }
 
 func (s *Storage) MatchExists(matchID string) (bool, error) {

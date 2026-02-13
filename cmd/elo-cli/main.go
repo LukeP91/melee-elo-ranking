@@ -1,8 +1,11 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/melee-elo-ranking/internal/config"
 	"github.com/melee-elo-ranking/internal/elo"
@@ -11,7 +14,11 @@ import (
 	"github.com/melee-elo-ranking/internal/storage"
 )
 
+var tournamentDates = flag.String("dates", "", "Tournament dates in format: 170676=2024-08-31,172453=2024-10-17")
+
 func main() {
+	flag.Parse()
+
 	// Load configuration
 	cfg, err := config.Load("config.json")
 	if err != nil {
@@ -34,8 +41,11 @@ func main() {
 	// Create parser
 	matchParser := parser.New()
 
+	// Parse tournament dates from flag
+	datesMap := parseTournamentDates(*tournamentDates)
+
 	// Process pending matches
-	processor := NewProcessor(store, calculator, matchParser, cfg)
+	processor := NewProcessor(store, calculator, matchParser, datesMap, cfg)
 	if err := processor.Process(); err != nil {
 		log.Fatalf("Failed to process matches: %v", err)
 	}
@@ -106,4 +116,32 @@ func ensureDirs(cfg *config.Config) {
 			log.Fatalf("Failed to create directory %s: %v", dir, err)
 		}
 	}
+}
+
+func parseTournamentDates(datesStr string) map[int]string {
+	result := make(map[int]string)
+	if datesStr == "" {
+		return result
+	}
+	// Format: 170676=2024-08-31,172453=2024-10-17
+	// or: 170676=2024-08-31
+	for _, part := range splitAndTrim(datesStr, ",") {
+		kv := splitAndTrim(part, "=")
+		if len(kv) == 2 {
+			var id int
+			if _, err := fmt.Sscanf(kv[0], "%d", &id); err == nil {
+				result[id] = kv[1]
+			}
+		}
+	}
+	return result
+}
+
+func splitAndTrim(s, sep string) []string {
+	parts := strings.Split(s, sep)
+	result := make([]string, len(parts))
+	for i, p := range parts {
+		result[i] = strings.TrimSpace(p)
+	}
+	return result
 }
