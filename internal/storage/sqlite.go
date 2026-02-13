@@ -410,6 +410,14 @@ func (s *Storage) SaveMatch(match Match) error {
 	return err
 }
 
+func (s *Storage) UpdateMatchELO(matchID string, player1ELOBefore, player2ELOBefore, player1ELOAfter, player2ELOAfter int) error {
+	_, err := s.db.Exec(
+		`UPDATE matches SET player1_elo_before = ?, player2_elo_before = ?, player1_elo_after = ?, player2_elo_after = ? WHERE id = ?`,
+		player1ELOBefore, player2ELOBefore, player1ELOAfter, player2ELOAfter, matchID,
+	)
+	return err
+}
+
 func (s *Storage) GetRankings() ([]Ranking, error) {
 	query := `SELECT 
 		display_name, username, current_elo, matches_played, wins, losses

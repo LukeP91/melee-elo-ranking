@@ -268,6 +268,11 @@ func (p *Processor) processMatchFromDB(match storage.Match) error {
 		return fmt.Errorf("failed to update player 2 ELO: %w", err)
 	}
 
+	// Update match with ELO values
+	if err := p.store.UpdateMatchELO(match.ID, player1.CurrentELO, player2.CurrentELO, newELO1, newELO2); err != nil {
+		return fmt.Errorf("failed to update match ELO: %w", err)
+	}
+
 	return nil
 }
 
