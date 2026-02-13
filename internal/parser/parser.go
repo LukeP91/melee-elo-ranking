@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 )
@@ -37,6 +38,20 @@ func (p *Parser) ParseFile(filepath string) ([]Match, error) {
 		return nil, err
 	}
 
+	// Try new format first (V2)
+	var rawMatchesV2 []RawMatchV2
+	if err := json.Unmarshal(data, &rawMatchesV2); err == nil && len(rawMatchesV2) > 0 {
+		var matches []Match
+		for _, raw := range rawMatchesV2 {
+			match := p.convertRawMatchV2(raw)
+			if match.ID != "" {
+				matches = append(matches, match)
+			}
+		}
+		return matches, nil
+	}
+
+	// Fall back to old format
 	var rawMatches []RawMatch
 	if err := json.Unmarshal(data, &rawMatches); err != nil {
 		return nil, err
@@ -68,6 +83,26 @@ type RawMatch struct {
 	} `json:"Competitors"`
 }
 
+type RawMatchV2 struct {
+	RoundNumber          int    `json:"RoundNumber"`
+	PhaseId              int    `json:"PhaseId"`
+	TableNumber          *int   `json:"TableNumber"`
+	Team1Id              int64  `json:"Team1Id"`
+	Team1                string `json:"Team1"`
+	Player1NameLastFirst string `json:"Player1NameLastFirst"`
+	Team1WinsAndByes     int    `json:"Team1WinsAndByes"`
+	Team2Id              int64  `json:"Team2Id"`
+	Team2                string `json:"Team2"`
+	Player2NameLastFirst string `json:"Player2NameLastFirst"`
+	Team2WinsAndByes     int    `json:"Team2WinsAndByes"`
+	GameDraws            *int   `json:"GameDraws"`
+	MatchesPublished     bool   `json:"MatchesPublished"`
+	HasResult            bool   `json:"HasResult"`
+	ByeReason            *int   `json:"ByeReason"`
+	AdminResultString    string `json:"AdminResultString"`
+	TimeExtensionMinutes *int   `json:"TimeExtensionMinutes"`
+}
+
 func (p *Parser) convertRawMatch(raw RawMatch) Match {
 	match := Match{
 		ID:           raw.Guid,
@@ -97,6 +132,47 @@ func (p *Parser) convertRawMatch(raw RawMatch) Match {
 		}
 		match.Competitors = append(match.Competitors, comp)
 	}
+
+	return match
+}
+
+func (p *Parser) convertRawMatchV2(raw RawMatchV2) Match {
+	// Generate a unique ID from the match data
+	matchID := fmt.Sprintf("%d-%d-%d-%d", raw.PhaseId, raw.RoundNumber, raw.Team1Id, raw.Team2Id)
+
+	match := Match{
+		ID:           matchID,
+		TournamentID: raw.PhaseId,
+		RoundNumber:  raw.RoundNumber,
+		DateCreated:  time.Now(), // No date in V2 format
+	}
+
+	// Skip bye matches
+	if raw.ByeReason != nil {
+		return Match{}
+	}
+
+	// Player 1 - use nickname (Team1) as display name for GDPR
+	comp1 := Competitor{
+		Player: Player{
+			ID:          raw.Team1Id,
+			DisplayName: raw.Team1,
+			Username:    raw.Team1,
+		},
+		GameWins: raw.Team1WinsAndByes,
+	}
+	match.Competitors = append(match.Competitors, comp1)
+
+	// Player 2 - use nickname (Team2) as display name for GDPR
+	comp2 := Competitor{
+		Player: Player{
+			ID:          raw.Team2Id,
+			DisplayName: raw.Team2,
+			Username:    raw.Team2,
+		},
+		GameWins: raw.Team2WinsAndByes,
+	}
+	match.Competitors = append(match.Competitors, comp2)
 
 	return match
 }
