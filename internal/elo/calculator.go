@@ -3,14 +3,12 @@ package elo
 import "math"
 
 type Calculator struct {
-	kFactor           int
 	initialRating     int
 	dynamicKThreshold int
 }
 
-func New(kFactor, initialRating int) *Calculator {
+func New(initialRating int) *Calculator {
 	return &Calculator{
-		kFactor:           kFactor,
 		initialRating:     initialRating,
 		dynamicKThreshold: 30,
 	}
@@ -66,10 +64,6 @@ func (c *Calculator) expectedScore(playerELO, opponentELO int) float64 {
 
 func (c *Calculator) GetInitialRating() int {
 	return c.initialRating
-}
-
-func (c *Calculator) GetKFactor() int {
-	return c.kFactor
 }
 
 func (c *Calculator) SetDynamicKThreshold(threshold int) {

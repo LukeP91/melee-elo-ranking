@@ -881,7 +881,7 @@ func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, player
         
         <header>
             <h1>Matchup Matrix</h1>
-            <p class="subtitle">Win rates between players (min. 2 matches)</p>
+            <p class="subtitle">Win rates between players (game count)</p>
         </header>
         
         <p class="matrix-info">Rows show the player on the left's win rate against the column player. Hover over cells for details.</p>
@@ -916,8 +916,8 @@ func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, player
         cells.forEach(cell => {
             cell.addEventListener('mouseenter', (e) => {
                 const data = cell.dataset;
-                if (data.matches) {
-                    tooltip.textContent = cell.textContent + ' (' + data.matches + ' matches)';
+                if (data.games) {
+                    tooltip.textContent = cell.textContent + ' (' + data.games + ' games)';
                     tooltip.style.display = 'block';
                 }
             });
@@ -962,7 +962,7 @@ func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]m
 				body += `<td class="empty">-</td>`
 			} else {
 				matches, found := matchupMap[player1][player2]
-				if !found || matches.MatchesPlayed == 0 {
+				if !found || matches.GamesPlayed == 0 {
 					body += `<td class="empty">-</td>`
 				} else {
 					cellClass := "cell-neutral"
@@ -971,9 +971,9 @@ func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]m
 					} else if matches.Player1WinRate < 40 {
 						cellClass = "cell-negative"
 					}
-					body += fmt.Sprintf(`<td class="cell %s" data-matches="%d" data-detail="%s vs %s: %d-%d">%.0f%%</td>`,
+					body += fmt.Sprintf(`<td class="cell %s" data-games="%d" data-detail="%s vs %s: %d-%d">%.0f%%</td>`,
 						cellClass,
-						matches.MatchesPlayed,
+						matches.GamesPlayed,
 						player1, player2,
 						matches.Player1Wins, matches.Player2Wins,
 						matches.Player1WinRate)

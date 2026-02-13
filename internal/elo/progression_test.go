@@ -59,7 +59,7 @@ func TestELORecordStorage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			calc := New(20, 1500)
+			calc := New(1500)
 
 			player1ID := int64(1)
 			player2ID := int64(2)
@@ -101,7 +101,7 @@ func TestELORecordStorage(t *testing.T) {
 }
 
 func TestELOProgressionsChain(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 	player1ID := int64(1)
 	player2ID := int64(2)
 

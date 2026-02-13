@@ -341,8 +341,8 @@ func TestMatchupsCombinedBidirectional(t *testing.T) {
 
 	// Match 1: Alice wins 2-1, Match 2: Bob wins 2-0
 	// Total: Alice 2 wins, Bob 3 wins = 5 games
-	if aliceBob.MatchesPlayed != 5 {
-		t.Errorf("expected 5 matches between TestAlice and TestBob, got %d", aliceBob.MatchesPlayed)
+	if aliceBob.GamesPlayed != 5 {
+		t.Errorf("expected 5 games between TestAlice and TestBob, got %d", aliceBob.GamesPlayed)
 	}
 
 	// Verify winrate
@@ -361,7 +361,7 @@ func TestMatchupsCombinedBidirectional(t *testing.T) {
 		}
 	}
 
-	if aliceCharlie.MatchesPlayed != 2 {
-		t.Errorf("expected 2 games between TestAlice and TestCharlie, got %d", aliceCharlie.MatchesPlayed)
+	if aliceCharlie.GamesPlayed != 2 {
+		t.Errorf("expected 2 games between TestAlice and TestCharlie, got %d", aliceCharlie.GamesPlayed)
 	}
 }

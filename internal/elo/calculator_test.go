@@ -10,7 +10,7 @@ func ptr(i int64) *int64 {
 }
 
 func TestExpectedScore(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	tests := []struct {
 		name        string
@@ -36,7 +36,7 @@ func TestExpectedScore(t *testing.T) {
 }
 
 func TestDynamicKFactor(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	tests := []struct {
 		name          string
@@ -63,7 +63,7 @@ func TestDynamicKFactor(t *testing.T) {
 }
 
 func TestCalculate_Win(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -81,7 +81,7 @@ func TestCalculate_Win(t *testing.T) {
 }
 
 func TestCalculate_Loss(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -99,7 +99,7 @@ func TestCalculate_Loss(t *testing.T) {
 }
 
 func TestCalculate_Draw(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -114,7 +114,7 @@ func TestCalculate_Draw(t *testing.T) {
 }
 
 func TestCalculate_Upset(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -134,7 +134,7 @@ func TestCalculate_Upset(t *testing.T) {
 }
 
 func TestCalculate_DominantPlayer(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -154,7 +154,7 @@ func TestCalculate_DominantPlayer(t *testing.T) {
 }
 
 func TestCalculate_DynamicKFactorWin(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -172,7 +172,7 @@ func TestCalculate_DynamicKFactorWin(t *testing.T) {
 }
 
 func TestCalculate_DynamicKFactorExperienced(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -190,7 +190,7 @@ func TestCalculate_DynamicKFactorExperienced(t *testing.T) {
 }
 
 func TestCalculate_MixedKFactors(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	player1ID := int64(1)
 	player2ID := int64(2)
@@ -209,17 +209,10 @@ func TestCalculate_MixedKFactors(t *testing.T) {
 }
 
 func TestCalculate_InitialRating(t *testing.T) {
-	calc := New(20, 1500)
+	calc := New(1500)
 
 	if calc.GetInitialRating() != 1500 {
 		t.Errorf("expected initial rating 1500, got %d", calc.GetInitialRating())
 	}
 }
 
-func TestCalculate_KFactorGetter(t *testing.T) {
-	calc := New(32, 1500)
-
-	if calc.GetKFactor() != 32 {
-		t.Errorf("expected K factor 32, got %d", calc.GetKFactor())
-	}
-}

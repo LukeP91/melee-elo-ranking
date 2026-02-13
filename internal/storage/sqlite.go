@@ -63,7 +63,7 @@ type Matchup struct {
 	Player2        string
 	Player1Wins    int
 	Player2Wins    int
-	MatchesPlayed  int
+	GamesPlayed    int
 	Player1WinRate float64
 }
 
@@ -560,7 +560,7 @@ func (s *Storage) GetMatchups() ([]Matchup, error) {
 			player_b as player2,
 			SUM(wins_a) as player1_wins,
 			SUM(wins_b) as player2_wins,
-			SUM(wins_a + wins_b) as match_count
+			SUM(wins_a + wins_b) as games_played
 		FROM normalized_matchups
 		GROUP BY player_a, player_b
 		ORDER BY player_a, player_b
@@ -575,15 +575,13 @@ func (s *Storage) GetMatchups() ([]Matchup, error) {
 	var matchups []Matchup
 	for rows.Next() {
 		var m Matchup
-		var matchCount int
-		err := rows.Scan(&m.Player1, &m.Player2, &m.Player1Wins, &m.Player2Wins, &matchCount)
+		err := rows.Scan(&m.Player1, &m.Player2, &m.Player1Wins, &m.Player2Wins, &m.GamesPlayed)
 		if err != nil {
 			return nil, err
 		}
-		m.MatchesPlayed = matchCount
 
-		if m.MatchesPlayed > 0 {
-			m.Player1WinRate = float64(m.Player1Wins) / float64(m.MatchesPlayed) * 100
+		if m.GamesPlayed > 0 {
+			m.Player1WinRate = float64(m.Player1Wins) / float64(m.GamesPlayed) * 100
 		}
 
 		matchups = append(matchups, m)
