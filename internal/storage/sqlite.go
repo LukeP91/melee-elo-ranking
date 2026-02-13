@@ -337,12 +337,12 @@ func (s *Storage) GetMatchups() ([]Matchup, error) {
 			p2.display_name as player2,
 			SUM(CASE WHEN m.player1_wins > m.player2_wins THEN 1 ELSE 0 END) as player1_wins,
 			SUM(CASE WHEN m.player2_wins > m.player1_wins THEN 1 ELSE 0 END) as player2_wins,
-			COUNT(*) as matches_played
+			COUNT(*) as match_count
 		FROM matches m
 		JOIN players p1 ON m.player1_id = p1.id
 		JOIN players p2 ON m.player2_id = p2.id
 		GROUP BY p1.display_name, p2.display_name
-		HAVING matches_played >= 2
+		HAVING COUNT(*) >= 2
 		ORDER BY p1.display_name, p2.display_name
 	`
 
@@ -355,10 +355,12 @@ func (s *Storage) GetMatchups() ([]Matchup, error) {
 	var matchups []Matchup
 	for rows.Next() {
 		var m Matchup
-		err := rows.Scan(&m.Player1, &m.Player2, &m.Player1Wins, &m.Player2Wins, &m.MatchesPlayed)
+		var matchCount int
+		err := rows.Scan(&m.Player1, &m.Player2, &m.Player1Wins, &m.Player2Wins, &matchCount)
 		if err != nil {
 			return nil, err
 		}
+		m.MatchesPlayed = matchCount
 
 		if m.MatchesPlayed > 0 {
 			m.Player1WinRate = float64(m.Player1Wins) / float64(m.MatchesPlayed) * 100

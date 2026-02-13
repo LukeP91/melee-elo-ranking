@@ -113,6 +113,13 @@ func (g *Generator) generateHTML(rankings []storage.Ranking) string {
             font-size: 1.1rem;
         }
         
+        .matrix-info {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
         .last-updated {
             text-align: center;
             color: #666;
@@ -873,6 +880,8 @@ func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, player
             <p class="subtitle">Win rates between players (min. 2 matches)</p>
         </header>
         
+        <p class="matrix-info">Rows show the player on the left's win rate against the column player. Hover over cells for details.</p>
+        
         <p class="last-updated">Last updated: %s</p>
         
         <div class="matrix-container">
@@ -948,8 +957,15 @@ func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]m
 			if player1 == player2 {
 				body += `<td class="empty">-</td>`
 			} else {
-				matches := matchupMap[player1][player2]
-				if matches.MatchesPlayed == 0 {
+				matches, found := matchupMap[player1][player2]
+				if !found {
+					matches, found = matchupMap[player2][player1]
+					if found {
+						matches.Player1Wins, matches.Player2Wins = matches.Player2Wins, matches.Player1Wins
+						matches.Player1WinRate = 100 - matches.Player1WinRate
+					}
+				}
+				if !found || matches.MatchesPlayed == 0 {
 					body += `<td class="empty">-</td>`
 				} else {
 					cellClass := "cell-neutral"
