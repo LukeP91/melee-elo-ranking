@@ -1,0 +1,18 @@
+{
+  "elo": {
+    "k_factor": 32,
+    "initial_rating": 1500
+  },
+  "paths": {
+    "pending_dir": "data/matches-pending",
+    "processed_dir": "data/matches-processed",
+    "failed_dir": "data/matches-failed",
+    "database": "data/rankings.db",
+    "output": "docs/index.html"
+  },
+  "output": {
+    "type": "file",
+    "title": "Melee ELO Rankings",
+    "description": "Weekly tournament rankings"
+  }
+}
