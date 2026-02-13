@@ -169,6 +169,17 @@ func (g *Generator) generateHTML(rankings []storage.Ranking) string {
             font-weight: 500;
         }
         
+        .player a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .player a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        
         .elo {
             font-weight: 700;
             font-size: 1.1rem;
