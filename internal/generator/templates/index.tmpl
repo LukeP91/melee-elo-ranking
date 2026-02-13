@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    {{template "base_css"}}
+    <style>
+        .rankings-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rankings-table thead {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .rankings-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            color: #a0a0a0;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .rankings-table th:hover {
+            color: #fff;
+            background: rgba(102, 126, 234, 0.3);
+        }
+        
+        .rankings-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .rankings-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .rankings-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .rank {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #667eea;
+            width: 60px;
+        }
+        
+        .player {
+            font-weight: 500;
+        }
+        
+        .player a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .player a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        
+        .elo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        
+        .matches, .record {
+            color: #aaa;
+        }
+        
+        .winrate {
+            font-weight: 600;
+        }
+        
+        .winrate.positive {
+            color: #4ade80;
+        }
+        
+        .winrate.negative {
+            color: #f87171;
+        }
+        
+        .winrate.neutral {
+            color: #fbbf24;
+        }
+        
+        @media (max-width: 768px) {
+            .rankings-table {
+                font-size: 0.9rem;
+            }
+            
+            .rankings-table th,
+            .rankings-table td {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .rank {
+                width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{.Title}}</h1>
+            <p class="subtitle">{{.Subtitle}}</p>
+        </header>
+        
+        <p class="last-updated">Last updated: {{.Timestamp}}</p>
+        
+        <table class="rankings-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>ELO</th>
+                    <th>Matches</th>
+                    <th>W-L</th>
+                    <th>Win %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Rankings}}
+                <tr>
+                    <td class="rank">{{.Rank}}</td>
+                    <td class="player"><a href="players/{{.DisplayName}}.html">{{.DisplayName}}</a></td>
+                    <td class="elo">{{.CurrentELO}}</td>
+                    <td class="matches">{{.MatchesPlayed}}</td>
+                    <td class="record">{{.Wins}}-{{.Losses}}</td>
+                    <td class="winrate {{.WinRateClass}}">{{printf "%.1f" .WinRate}}%</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        
+        {{template "footer" .}}
+    </div>
+    
+    <script>
+        // Simple table sorting
+        document.querySelectorAll('.rankings-table th').forEach(header => {
+            header.addEventListener('click', () => {
+                const table = header.closest('table');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                const index = Array.from(header.parentNode.children).indexOf(header);
+                const isNumeric = index > 0;
+                
+                rows.sort((a, b) => {
+                    const aVal = a.children[index].textContent.trim();
+                    const bVal = b.children[index].textContent.trim();
+                    
+                    if (isNumeric) {
+                        return parseFloat(aVal) - parseFloat(bVal);
+                    }
+                    return aVal.localeCompare(bVal);
+                });
+                
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+    </script>
+</body>
+</html>

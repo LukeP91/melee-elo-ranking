@@ -24,20 +24,6 @@
             margin: 0 auto;
         }
         
-        .back-link {
-            margin-bottom: 1rem;
-        }
-        
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        
         header {
             text-align: center;
             margin-bottom: 2rem;
@@ -50,6 +36,62 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .matrix-info {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <style>
+        .back-link {
+            margin-bottom: 1rem;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
         }
         
         .stats-grid {
@@ -151,10 +193,6 @@
         }
         
         @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
             .matches-table {
                 font-size: 0.85rem;
             }
@@ -239,98 +277,112 @@
                 </thead>
                 <tbody>
                     
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 1</td>
-					<td>PanRakieta</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1500</td>
-					<td>1522</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 2</td>
-					<td>GGrajek</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1522</td>
-					<td>1508</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 3</td>
-					<td>LukeP911</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1508</td>
-					<td>1487</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 4</td>
-					<td>guandi</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1487</td>
-					<td>1465</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 5</td>
-					<td>Dinosek</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1465</td>
-					<td>1485</td>
-				</tr>
-				<tr>
-					<td>Dec 28, 2025</td>
-					<td>Round 1</td>
-					<td>KonradC</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1485</td>
-					<td>1506</td>
-				</tr>
-				<tr>
-					<td>Dec 28, 2025</td>
-					<td>Round 2</td>
-					<td>Paul88</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1506</td>
-					<td>1487</td>
-				</tr>
-				<tr>
-					<td>Dec 28, 2025</td>
-					<td>Round 3</td>
-					<td>JNQ</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1487</td>
-					<td>1505</td>
-				</tr>
-				<tr>
-					<td>Dec 28, 2025</td>
-					<td>Round 4</td>
-					<td>Gordogon</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1505</td>
-					<td>1484</td>
-				</tr>
-				<tr>
-					<td>Dec 28, 2025</td>
-					<td>Round 5</td>
-					<td>kendbi</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1484</td>
-					<td>1501</td>
-				</tr>
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 1</td>
+                        <td>PanRakieta</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1500</td>
+                        <td>1522</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 2</td>
+                        <td>GGrajek</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1522</td>
+                        <td>1508</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 3</td>
+                        <td>LukeP911</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1508</td>
+                        <td>1487</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 4</td>
+                        <td>guandi</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1487</td>
+                        <td>1465</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 5</td>
+                        <td>Dinosek</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1465</td>
+                        <td>1485</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Dec 28, 2025</td>
+                        <td>Round 1</td>
+                        <td>KonradC</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1485</td>
+                        <td>1506</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Dec 28, 2025</td>
+                        <td>Round 2</td>
+                        <td>Paul88</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1506</td>
+                        <td>1487</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Dec 28, 2025</td>
+                        <td>Round 3</td>
+                        <td>JNQ</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1487</td>
+                        <td>1505</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Dec 28, 2025</td>
+                        <td>Round 4</td>
+                        <td>Gordogon</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1505</td>
+                        <td>1484</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Dec 28, 2025</td>
+                        <td>Round 5</td>
+                        <td>kendbi</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1484</td>
+                        <td>1501</td>
+                    </tr>
+                    
                 </tbody>
             </table>
+        </div>
+        
+        <div class="footer">
+            <p><a href="matchups.html">Matchup Matrix</a> | Powered by <a href="https://github.com/melee-elo-ranking">Melee ELO Rankings</a></p>
         </div>
     </div>
 </body>

@@ -24,20 +24,6 @@
             margin: 0 auto;
         }
         
-        .back-link {
-            margin-bottom: 1rem;
-        }
-        
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        
         header {
             text-align: center;
             margin-bottom: 2rem;
@@ -50,6 +36,62 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .matrix-info {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <style>
+        .back-link {
+            margin-bottom: 1rem;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
         }
         
         .stats-grid {
@@ -151,10 +193,6 @@
         }
         
         @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
             .matches-table {
                 font-size: 0.85rem;
             }
@@ -182,11 +220,11 @@
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value">1529</div>
+                <div class="stat-value">1539</div>
                 <div class="stat-label">Current ELO</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">14</div>
+                <div class="stat-value">12</div>
                 <div class="stat-label">Rank</div>
             </div>
             <div class="stat-card">
@@ -216,8 +254,8 @@
 		<rect x="0" y="0" width="800" height="300" fill="rgba(255,255,255,0.02)" rx="8" />
 		<line x1="50" y1="50" x2="50" y2="250" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
 		<line x1="50" y1="250" x2="750" y2="250" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
-		<text x="40" y="254" text-anchor="end" fill="#888" font-size="12">1410</text><text x="40" y="214" text-anchor="end" fill="#888" font-size="12">1437</text><text x="40" y="174" text-anchor="end" fill="#888" font-size="12">1465</text><text x="40" y="134" text-anchor="end" fill="#888" font-size="12">1492</text><text x="40" y="94" text-anchor="end" fill="#888" font-size="12">1520</text><text x="40" y="54" text-anchor="end" fill="#888" font-size="12">1548</text>
-		<polyline points="50,94 63,123 76,146 90,175 103,148 117,178 130,211 144,235 157,200 171,165 184,181 198,211 211,172 225,188 238,149 251,179 265,204 278,172 292,145 305,175 319,146 332,137 346,107 359,127 373,97 386,114 400,87 413,66 426,97 440,119 453,107 467,117 480,127 494,116 507,103 521,82 534,100 548,113 561,97 575,106 588,91 601,106 615,116 628,101 642,114 655,137 669,120 682,103 696,116 709,127 723,106 736,95 750,78" fill="none" stroke="url(#lineGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+		<text x="40" y="254" text-anchor="end" fill="#888" font-size="12">1410</text><text x="40" y="214" text-anchor="end" fill="#888" font-size="12">1438</text><text x="40" y="174" text-anchor="end" fill="#888" font-size="12">1466</text><text x="40" y="134" text-anchor="end" fill="#888" font-size="12">1494</text><text x="40" y="94" text-anchor="end" fill="#888" font-size="12">1522</text><text x="40" y="54" text-anchor="end" fill="#888" font-size="12">1550</text>
+		<polyline points="50,96 63,125 76,148 90,176 103,149 117,179 130,212 144,235 157,200 171,166 184,182 198,212 211,173 225,189 238,150 251,180 265,205 278,173 292,193 305,213 319,183 332,155 346,183 359,155 373,145 386,115 400,135 413,105 426,120 440,93 453,83 467,98 480,108 494,96 507,85 521,66 534,85 548,98 561,83 575,92 588,78 601,92 615,102 628,88 642,102 655,125 669,108 682,90 696,103 709,115 723,93 736,83 750,66" fill="none" stroke="url(#lineGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
 		<text x="400" y="35" text-anchor="middle" fill="#667eea" font-size="14" font-weight="600">ELO Over Time (by Tournament)</text>
 	</svg>
             </div>
@@ -239,485 +277,542 @@
                 </thead>
                 <tbody>
                     
-				<tr>
-					<td>Jan 11, 2025</td>
-					<td>Round 1</td>
-					<td>aedin</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1500</td>
-					<td>1518</td>
-				</tr>
-				<tr>
-					<td>Jan 11, 2025</td>
-					<td>Round 2</td>
-					<td>Civil84</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1518</td>
-					<td>1498</td>
-				</tr>
-				<tr>
-					<td>Jan 11, 2025</td>
-					<td>Round 3</td>
-					<td>bjoxu</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1498</td>
-					<td>1482</td>
-				</tr>
-				<tr>
-					<td>Jan 11, 2025</td>
-					<td>Round 4</td>
-					<td>Etorion</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1482</td>
-					<td>1462</td>
-				</tr>
-				<tr>
-					<td>Jan 11, 2025</td>
-					<td>Round 5</td>
-					<td>Glodny</td>
-					<td>1-0</td>
-					<td class="positive">Win</td>
-					<td>1462</td>
-					<td>1481</td>
-				</tr>
-				<tr>
-					<td>Jan 16, 2025</td>
-					<td>Round 1</td>
-					<td>Gordogon</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1481</td>
-					<td>1460</td>
-				</tr>
-				<tr>
-					<td>Jan 16, 2025</td>
-					<td>Round 2</td>
-					<td>NqT</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1460</td>
-					<td>1437</td>
-				</tr>
-				<tr>
-					<td>Jan 16, 2025</td>
-					<td>Round 3</td>
-					<td>aedin</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1437</td>
-					<td>1421</td>
-				</tr>
-				<tr>
-					<td>Jan 23, 2025</td>
-					<td>Round 1</td>
-					<td>Zagloba</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1421</td>
-					<td>1445</td>
-				</tr>
-				<tr>
-					<td>Jan 23, 2025</td>
-					<td>Round 2</td>
-					<td>shayboos</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1445</td>
-					<td>1469</td>
-				</tr>
-				<tr>
-					<td>Jan 23, 2025</td>
-					<td>Round 3</td>
-					<td>bjoxu</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1469</td>
-					<td>1458</td>
-				</tr>
-				<tr>
-					<td>Jan 30, 2025</td>
-					<td>Round 1</td>
-					<td>Avesdel</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1458</td>
-					<td>1437</td>
-				</tr>
-				<tr>
-					<td>Jan 30, 2025</td>
-					<td>Round 2</td>
-					<td>Mackin</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1437</td>
-					<td>1464</td>
-				</tr>
-				<tr>
-					<td>Jan 30, 2025</td>
-					<td>Round 3</td>
-					<td>Szavi</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1464</td>
-					<td>1453</td>
-				</tr>
-				<tr>
-					<td>May 8, 2025</td>
-					<td>Round 1</td>
-					<td>aedin</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1453</td>
-					<td>1480</td>
-				</tr>
-				<tr>
-					<td>May 8, 2025</td>
-					<td>Round 2</td>
-					<td>Szitsu Szitsu</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1480</td>
-					<td>1459</td>
-				</tr>
-				<tr>
-					<td>May 8, 2025</td>
-					<td>Round 3</td>
-					<td>PanRakieta</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1459</td>
-					<td>1442</td>
-				</tr>
-				<tr>
-					<td>May 8, 2025</td>
-					<td>Round 4</td>
-					<td>Zorgon</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1442</td>
-					<td>1464</td>
-				</tr>
-				<tr>
-					<td>May 29, 2025</td>
-					<td>Round 1</td>
-					<td>Zorgon</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1464</td>
-					<td>1483</td>
-				</tr>
-				<tr>
-					<td>May 29, 2025</td>
-					<td>Round 2</td>
-					<td>Gordogon</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1483</td>
-					<td>1462</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 1</td>
-					<td>Szitsu Szitsu</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1462</td>
-					<td>1482</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 2</td>
-					<td>Szavi</td>
-					<td>1-1</td>
-					<td class="neutral">Draw</td>
-					<td>1482</td>
-					<td>1488</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 3</td>
-					<td>dzej</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1488</td>
-					<td>1509</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 4</td>
-					<td>MrUntiltable</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1509</td>
-					<td>1495</td>
-				</tr>
-				<tr>
-					<td>Jun 8, 2025</td>
-					<td>Round 5</td>
-					<td>Civil84</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1495</td>
-					<td>1516</td>
-				</tr>
-				<tr>
-					<td>Jun 12, 2025</td>
-					<td>Round 1</td>
-					<td>Mackin</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1516</td>
-					<td>1504</td>
-				</tr>
-				<tr>
-					<td>Jun 12, 2025</td>
-					<td>Round 2</td>
-					<td>RokerPlay</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1504</td>
-					<td>1523</td>
-				</tr>
-				<tr>
-					<td>Jun 12, 2025</td>
-					<td>Round 3</td>
-					<td>Dzizus</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1523</td>
-					<td>1537</td>
-				</tr>
-				<tr>
-					<td>Jun 12, 2025</td>
-					<td>Round 4</td>
-					<td>bjoxu</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1537</td>
-					<td>1516</td>
-				</tr>
-				<tr>
-					<td>Jun 19, 2025</td>
-					<td>Round 1</td>
-					<td>Szavi</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1516</td>
-					<td>1501</td>
-				</tr>
-				<tr>
-					<td>Jun 19, 2025</td>
-					<td>Round 3</td>
-					<td>Szitsu Szitsu</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1501</td>
-					<td>1509</td>
-				</tr>
-				<tr>
-					<td>Jun 22, 2025</td>
-					<td>Round 1</td>
-					<td>Szavi</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1509</td>
-					<td>1502</td>
-				</tr>
-				<tr>
-					<td>Jun 22, 2025</td>
-					<td>Round 2</td>
-					<td>DarthLatus</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1502</td>
-					<td>1495</td>
-				</tr>
-				<tr>
-					<td>Jun 22, 2025</td>
-					<td>Round 3</td>
-					<td>Szitsu Szitsu</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1495</td>
-					<td>1503</td>
-				</tr>
-				<tr>
-					<td>Jul 24, 2025</td>
-					<td>Round 1</td>
-					<td>Luna90</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1503</td>
-					<td>1512</td>
-				</tr>
-				<tr>
-					<td>Jul 24, 2025</td>
-					<td>Round 2</td>
-					<td>Szavi</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1512</td>
-					<td>1526</td>
-				</tr>
-				<tr>
-					<td>Jul 24, 2025</td>
-					<td>Round 3</td>
-					<td>Szitsu Szitsu</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1526</td>
-					<td>1514</td>
-				</tr>
-				<tr>
-					<td>Jul 24, 2025</td>
-					<td>Round 4</td>
-					<td>aedin</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1514</td>
-					<td>1505</td>
-				</tr>
-				<tr>
-					<td>Aug 7, 2025</td>
-					<td>Round 1</td>
-					<td>Gordogon</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1505</td>
-					<td>1516</td>
-				</tr>
-				<tr>
-					<td>Aug 7, 2025</td>
-					<td>Round 2</td>
-					<td>Mackin</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1516</td>
-					<td>1510</td>
-				</tr>
-				<tr>
-					<td>Aug 7, 2025</td>
-					<td>Round 3</td>
-					<td>NqT</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1510</td>
-					<td>1520</td>
-				</tr>
-				<tr>
-					<td>Aug 7, 2025</td>
-					<td>Round 4</td>
-					<td>bjoxu</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1520</td>
-					<td>1510</td>
-				</tr>
-				<tr>
-					<td>Aug 28, 2025</td>
-					<td>Round 1</td>
-					<td>RaFrog</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1510</td>
-					<td>1503</td>
-				</tr>
-				<tr>
-					<td>Aug 28, 2025</td>
-					<td>Round 2</td>
-					<td>Gordogon</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1503</td>
-					<td>1513</td>
-				</tr>
-				<tr>
-					<td>Aug 28, 2025</td>
-					<td>Round 3</td>
-					<td>Dreamymarek</td>
-					<td>0-2</td>
-					<td class="negative">Loss</td>
-					<td>1513</td>
-					<td>1504</td>
-				</tr>
-				<tr>
-					<td>Aug 28, 2025</td>
-					<td>Round 4</td>
-					<td>kendbi</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1504</td>
-					<td>1488</td>
-				</tr>
-				<tr>
-					<td>Sep 3, 2025</td>
-					<td>Round 1</td>
-					<td>Szavi</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1488</td>
-					<td>1500</td>
-				</tr>
-				<tr>
-					<td>Sep 3, 2025</td>
-					<td>Round 2</td>
-					<td>aedin</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1500</td>
-					<td>1512</td>
-				</tr>
-				<tr>
-					<td>Sep 3, 2025</td>
-					<td>Round 3</td>
-					<td>bjoxu</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1512</td>
-					<td>1503</td>
-				</tr>
-				<tr>
-					<td>Sep 3, 2025</td>
-					<td>Round 4</td>
-					<td>Spamm3r</td>
-					<td>1-2</td>
-					<td class="negative">Loss</td>
-					<td>1503</td>
-					<td>1495</td>
-				</tr>
-				<tr>
-					<td>Jan 29, 2026</td>
-					<td>Round 1</td>
-					<td>Mackin</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1495</td>
-					<td>1510</td>
-				</tr>
-				<tr>
-					<td>Jan 29, 2026</td>
-					<td>Round 2</td>
-					<td>walkirios</td>
-					<td>2-0</td>
-					<td class="positive">Win</td>
-					<td>1510</td>
-					<td>1517</td>
-				</tr>
-				<tr>
-					<td>Jan 29, 2026</td>
-					<td>Round 3</td>
-					<td>aedin</td>
-					<td>2-1</td>
-					<td class="positive">Win</td>
-					<td>1517</td>
-					<td>1529</td>
-				</tr>
+                    <tr>
+                        <td>Jan 11, 2025</td>
+                        <td>Round 1</td>
+                        <td>aedin</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1500</td>
+                        <td>1518</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 11, 2025</td>
+                        <td>Round 2</td>
+                        <td>Civil84</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1518</td>
+                        <td>1498</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 11, 2025</td>
+                        <td>Round 3</td>
+                        <td>bjoxu</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1498</td>
+                        <td>1482</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 11, 2025</td>
+                        <td>Round 4</td>
+                        <td>Etorion</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1482</td>
+                        <td>1462</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 11, 2025</td>
+                        <td>Round 5</td>
+                        <td>Glodny</td>
+                        <td>1-0</td>
+                        <td class="positive">Win</td>
+                        <td>1462</td>
+                        <td>1481</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 16, 2025</td>
+                        <td>Round 1</td>
+                        <td>Gordogon</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1481</td>
+                        <td>1460</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 16, 2025</td>
+                        <td>Round 2</td>
+                        <td>NqT</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1460</td>
+                        <td>1437</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 16, 2025</td>
+                        <td>Round 3</td>
+                        <td>aedin</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1437</td>
+                        <td>1421</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 23, 2025</td>
+                        <td>Round 1</td>
+                        <td>Zagloba</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1421</td>
+                        <td>1445</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 23, 2025</td>
+                        <td>Round 2</td>
+                        <td>shayboos</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1445</td>
+                        <td>1469</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 23, 2025</td>
+                        <td>Round 3</td>
+                        <td>bjoxu</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1469</td>
+                        <td>1458</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 30, 2025</td>
+                        <td>Round 1</td>
+                        <td>Avesdel</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1458</td>
+                        <td>1437</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 30, 2025</td>
+                        <td>Round 2</td>
+                        <td>Mackin</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1437</td>
+                        <td>1464</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 30, 2025</td>
+                        <td>Round 3</td>
+                        <td>Szavi</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1464</td>
+                        <td>1453</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 8, 2025</td>
+                        <td>Round 1</td>
+                        <td>aedin</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1453</td>
+                        <td>1480</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 8, 2025</td>
+                        <td>Round 2</td>
+                        <td>Szitsu Szitsu</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1480</td>
+                        <td>1459</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 8, 2025</td>
+                        <td>Round 3</td>
+                        <td>PanRakieta</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1459</td>
+                        <td>1442</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 8, 2025</td>
+                        <td>Round 4</td>
+                        <td>Zorgon</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1442</td>
+                        <td>1464</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 22, 2025</td>
+                        <td>Round 1</td>
+                        <td>Szavi</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1464</td>
+                        <td>1450</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 22, 2025</td>
+                        <td>Round 2</td>
+                        <td>DarthLatus</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1450</td>
+                        <td>1436</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 22, 2025</td>
+                        <td>Round 3</td>
+                        <td>Szitsu Szitsu</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1436</td>
+                        <td>1457</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 29, 2025</td>
+                        <td>Round 1</td>
+                        <td>Zorgon</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1457</td>
+                        <td>1477</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>May 29, 2025</td>
+                        <td>Round 2</td>
+                        <td>Gordogon</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1477</td>
+                        <td>1457</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 1</td>
+                        <td>Szitsu Szitsu</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1457</td>
+                        <td>1477</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 2</td>
+                        <td>Szavi</td>
+                        <td>1-1</td>
+                        <td class="neutral">Draw</td>
+                        <td>1477</td>
+                        <td>1484</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 3</td>
+                        <td>dzej</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1484</td>
+                        <td>1505</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 4</td>
+                        <td>MrUntiltable</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1505</td>
+                        <td>1491</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 8, 2025</td>
+                        <td>Round 5</td>
+                        <td>Civil84</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1491</td>
+                        <td>1512</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 12, 2025</td>
+                        <td>Round 1</td>
+                        <td>Mackin</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1512</td>
+                        <td>1501</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 12, 2025</td>
+                        <td>Round 2</td>
+                        <td>RokerPlay</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1501</td>
+                        <td>1520</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 12, 2025</td>
+                        <td>Round 3</td>
+                        <td>Dzizus</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1520</td>
+                        <td>1527</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 12, 2025</td>
+                        <td>Round 4</td>
+                        <td>bjoxu</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1527</td>
+                        <td>1517</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 19, 2025</td>
+                        <td>Round 1</td>
+                        <td>Szavi</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1517</td>
+                        <td>1510</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jun 19, 2025</td>
+                        <td>Round 3</td>
+                        <td>Szitsu Szitsu</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1510</td>
+                        <td>1518</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jul 24, 2025</td>
+                        <td>Round 1</td>
+                        <td>Luna90</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1518</td>
+                        <td>1526</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jul 24, 2025</td>
+                        <td>Round 2</td>
+                        <td>Szavi</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1526</td>
+                        <td>1539</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jul 24, 2025</td>
+                        <td>Round 3</td>
+                        <td>Szitsu Szitsu</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1539</td>
+                        <td>1526</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jul 24, 2025</td>
+                        <td>Round 4</td>
+                        <td>aedin</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1526</td>
+                        <td>1517</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 7, 2025</td>
+                        <td>Round 1</td>
+                        <td>Gordogon</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1517</td>
+                        <td>1527</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 7, 2025</td>
+                        <td>Round 2</td>
+                        <td>Mackin</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1527</td>
+                        <td>1521</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 7, 2025</td>
+                        <td>Round 3</td>
+                        <td>NqT</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1521</td>
+                        <td>1531</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 7, 2025</td>
+                        <td>Round 4</td>
+                        <td>bjoxu</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1531</td>
+                        <td>1521</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 28, 2025</td>
+                        <td>Round 1</td>
+                        <td>RaFrog</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1521</td>
+                        <td>1514</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 28, 2025</td>
+                        <td>Round 2</td>
+                        <td>Gordogon</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1514</td>
+                        <td>1524</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 28, 2025</td>
+                        <td>Round 3</td>
+                        <td>Dreamymarek</td>
+                        <td>0-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1524</td>
+                        <td>1514</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Aug 28, 2025</td>
+                        <td>Round 4</td>
+                        <td>kendbi</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1514</td>
+                        <td>1498</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Sep 3, 2025</td>
+                        <td>Round 1</td>
+                        <td>Szavi</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1498</td>
+                        <td>1510</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Sep 3, 2025</td>
+                        <td>Round 2</td>
+                        <td>aedin</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1510</td>
+                        <td>1522</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Sep 3, 2025</td>
+                        <td>Round 3</td>
+                        <td>bjoxu</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1522</td>
+                        <td>1513</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Sep 3, 2025</td>
+                        <td>Round 4</td>
+                        <td>Spamm3r</td>
+                        <td>1-2</td>
+                        <td class="negative">Loss</td>
+                        <td>1513</td>
+                        <td>1505</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 29, 2026</td>
+                        <td>Round 1</td>
+                        <td>Mackin</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1505</td>
+                        <td>1520</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 29, 2026</td>
+                        <td>Round 2</td>
+                        <td>walkirios</td>
+                        <td>2-0</td>
+                        <td class="positive">Win</td>
+                        <td>1520</td>
+                        <td>1527</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Jan 29, 2026</td>
+                        <td>Round 3</td>
+                        <td>aedin</td>
+                        <td>2-1</td>
+                        <td class="positive">Win</td>
+                        <td>1527</td>
+                        <td>1539</td>
+                    </tr>
+                    
                 </tbody>
             </table>
+        </div>
+        
+        <div class="footer">
+            <p><a href="matchups.html">Matchup Matrix</a> | Powered by <a href="https://github.com/melee-elo-ranking">Melee ELO Rankings</a></p>
         </div>
     </div>
 </body>

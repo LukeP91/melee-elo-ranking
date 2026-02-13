@@ -13,6 +13,7 @@ import (
 
 	"github.com/melee-elo-ranking/internal/config"
 	"github.com/melee-elo-ranking/internal/elo"
+	"github.com/melee-elo-ranking/internal/melee"
 	"github.com/melee-elo-ranking/internal/parser"
 	"github.com/melee-elo-ranking/internal/storage"
 )
@@ -21,15 +22,17 @@ type Processor struct {
 	store           *storage.Storage
 	calculator      *elo.Calculator
 	parser          *parser.Parser
+	meleeClient     *melee.Client
 	tournamentDates map[int]string
 	config          *config.Config
 }
 
-func NewProcessor(store *storage.Storage, calc *elo.Calculator, parser *parser.Parser, tournamentDates map[int]string, cfg *config.Config) *Processor {
+func NewProcessor(store *storage.Storage, calc *elo.Calculator, parser *parser.Parser, meleeClient *melee.Client, tournamentDates map[int]string, cfg *config.Config) *Processor {
 	return &Processor{
 		store:           store,
 		calculator:      calc,
 		parser:          parser,
+		meleeClient:     meleeClient,
 		tournamentDates: tournamentDates,
 		config:          cfg,
 	}
@@ -105,12 +108,24 @@ func (p *Processor) Process() error {
 			if existing != nil && !existing.Date.IsZero() {
 				tournamentDate = existing.Date
 			} else {
-				// Prompt for date
-				tournamentDate, err = promptForTournamentDate(tf.tournamentID)
-				if err != nil {
-					fmt.Printf("Warning: failed to get tournament date for %d: %v\n", tf.tournamentID, err)
-					p.moveToFailed(tf.filename)
-					continue
+				// Try to fetch date from melee.gg page
+				if p.meleeClient != nil {
+					fetched, fetchErr := p.meleeClient.FetchTournamentDate(tf.tournamentID)
+					if fetchErr == nil && !fetched.IsZero() {
+						tournamentDate = fetched
+						fmt.Printf("Fetched date for tournament %d from melee.gg: %s\n", tf.tournamentID, tournamentDate.Format("2006-01-02"))
+					} else if fetchErr != nil {
+						fmt.Printf("Could not fetch date for tournament %d: %v\n", tf.tournamentID, fetchErr)
+					}
+				}
+				// If still no date, prompt user
+				if tournamentDate.IsZero() {
+					tournamentDate, err = promptForTournamentDate(tf.tournamentID)
+					if err != nil {
+						fmt.Printf("Warning: failed to get tournament date for %d: %v\n", tf.tournamentID, err)
+						p.moveToFailed(tf.filename)
+						continue
+					}
 				}
 			}
 		}

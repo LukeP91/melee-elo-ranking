@@ -10,6 +10,7 @@ import (
 	"github.com/melee-elo-ranking/internal/config"
 	"github.com/melee-elo-ranking/internal/elo"
 	"github.com/melee-elo-ranking/internal/generator"
+	"github.com/melee-elo-ranking/internal/melee"
 	"github.com/melee-elo-ranking/internal/parser"
 	"github.com/melee-elo-ranking/internal/storage"
 )
@@ -36,16 +37,19 @@ func main() {
 	defer store.Close()
 
 	// Create ELO calculator
-	calculator := elo.New(cfg.ELO.KFactor, cfg.ELO.InitialRating)
+	calculator := elo.New(cfg.ELO.InitialRating)
 
 	// Create parser
 	matchParser := parser.New()
+
+	// Create melee client for fetching tournament dates from melee.gg
+	meleeClient := melee.NewClient()
 
 	// Parse tournament dates from flag
 	datesMap := parseTournamentDates(*tournamentDates)
 
 	// Process pending matches
-	processor := NewProcessor(store, calculator, matchParser, datesMap, cfg)
+	processor := NewProcessor(store, calculator, matchParser, meleeClient, datesMap, cfg)
 	if err := processor.Process(); err != nil {
 		log.Fatalf("Failed to process matches: %v", err)
 	}
