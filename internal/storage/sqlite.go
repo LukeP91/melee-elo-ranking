@@ -465,8 +465,7 @@ type PlayerMatch struct {
 func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, error) {
 	query := `
 		SELECT 
-			m.date_played,
-			m.tournament_id,
+			t.date as tournament_date,
 			m.round,
 			CASE 
 				WHEN p1.display_name = ? THEN p2.display_name
@@ -491,8 +490,10 @@ func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, erro
 		FROM matches m
 		JOIN players p1 ON m.player1_id = p1.id
 		JOIN players p2 ON m.player2_id = p2.id
-		WHERE p1.display_name = ? OR p2.display_name = ?
-		ORDER BY m.date_played, m.tournament_id, m.round
+		JOIN tournaments t ON m.tournament_id = t.melee_id
+		WHERE (p1.display_name = ? OR p2.display_name = ?)
+		  AND t.date IS NOT NULL
+		ORDER BY t.date ASC, m.round ASC
 	`
 
 	rows, err := s.db.Query(query, displayName, displayName, displayName, displayName, displayName, displayName, displayName)
@@ -506,7 +507,6 @@ func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, erro
 		var m PlayerMatch
 		err := rows.Scan(
 			&m.DatePlayed,
-			&m.TournamentID,
 			&m.Round,
 			&m.OpponentName,
 			&m.PlayerWins,

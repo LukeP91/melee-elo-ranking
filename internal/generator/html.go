@@ -331,7 +331,7 @@ func (g *Generator) generatePlayerHTML(playerName string, matches []storage.Play
 
 		matchRows += fmt.Sprintf(`
 				<tr>
-					<td>Tournament %d</td>
+					<td>%s</td>
 					<td>Round %d</td>
 					<td>%s</td>
 					<td>%d-%d</td>
@@ -339,7 +339,7 @@ func (g *Generator) generatePlayerHTML(playerName string, matches []storage.Play
 					<td>%d</td>
 					<td>%d</td>
 				</tr>`,
-			m.TournamentID,
+			m.DatePlayed.Format("Jan 2, 2006"),
 			m.Round,
 			m.OpponentName,
 			m.PlayerWins,
@@ -584,7 +584,7 @@ func (g *Generator) generatePlayerHTML(playerName string, matches []storage.Play
             <table class="matches-table">
                 <thead>
                     <tr>
-                        <th>Tournament</th>
+                        <th>Date</th>
                         <th>Round</th>
                         <th>Opponent</th>
                         <th>Score</th>
