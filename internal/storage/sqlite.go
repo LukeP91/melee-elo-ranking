@@ -51,6 +51,15 @@ type Ranking struct {
 	WinRate       float64
 }
 
+type Matchup struct {
+	Player1        string
+	Player2        string
+	Player1Wins    int
+	Player2Wins    int
+	MatchesPlayed  int
+	Player1WinRate float64
+}
+
 func New(dbPath string) (*Storage, error) {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
@@ -319,4 +328,44 @@ func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, erro
 	}
 
 	return matches, rows.Err()
+}
+
+func (s *Storage) GetMatchups() ([]Matchup, error) {
+	query := `
+		SELECT 
+			p1.display_name as player1,
+			p2.display_name as player2,
+			SUM(CASE WHEN m.player1_wins > m.player2_wins THEN 1 ELSE 0 END) as player1_wins,
+			SUM(CASE WHEN m.player2_wins > m.player1_wins THEN 1 ELSE 0 END) as player2_wins,
+			COUNT(*) as matches_played
+		FROM matches m
+		JOIN players p1 ON m.player1_id = p1.id
+		JOIN players p2 ON m.player2_id = p2.id
+		GROUP BY p1.display_name, p2.display_name
+		HAVING matches_played >= 2
+		ORDER BY p1.display_name, p2.display_name
+	`
+
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var matchups []Matchup
+	for rows.Next() {
+		var m Matchup
+		err := rows.Scan(&m.Player1, &m.Player2, &m.Player1Wins, &m.Player2Wins, &m.MatchesPlayed)
+		if err != nil {
+			return nil, err
+		}
+
+		if m.MatchesPlayed > 0 {
+			m.Player1WinRate = float64(m.Player1Wins) / float64(m.MatchesPlayed) * 100
+		}
+
+		matchups = append(matchups, m)
+	}
+
+	return matchups, rows.Err()
 }

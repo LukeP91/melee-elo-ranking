@@ -30,6 +30,11 @@ func (g *Generator) GeneratePlayerPage(playerName string, matches []storage.Play
 	return os.WriteFile(outputPath, []byte(html), 0644)
 }
 
+func (g *Generator) GenerateMatchupMatrix(matchups []storage.Matchup, players []string, outputPath string) error {
+	html := g.generateMatchupMatrixHTML(matchups, players)
+	return os.WriteFile(outputPath, []byte(html), 0644)
+}
+
 func (g *Generator) generateHTML(rankings []storage.Ranking) string {
 	timestamp := time.Now().Format("January 2, 2006 15:04")
 
@@ -268,7 +273,7 @@ func (g *Generator) generateHTML(rankings []storage.Ranking) string {
         </table>
         
         <div class="footer">
-            <p>Powered by <a href="https://github.com/melee-elo-ranking">Melee ELO Rankings</a></p>
+            <p><a href="matchups.html">Matchup Matrix</a> | Powered by <a href="https://github.com/melee-elo-ranking">Melee ELO Rankings</a></p>
         </div>
     </div>
     
@@ -683,4 +688,286 @@ func (g *Generator) generateELOChart(matches []storage.PlayerMatch) string {
 		points,
 		width/2, padding-15,
 	)
+}
+
+func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, players []string) string {
+	timestamp := time.Now().Format("January 2, 2006 15:04")
+
+	matchupMap := make(map[string]map[string]storage.Matchup)
+	for _, m := range matchups {
+		if matchupMap[m.Player1] == nil {
+			matchupMap[m.Player1] = make(map[string]storage.Matchup)
+		}
+		matchupMap[m.Player1][m.Player2] = m
+	}
+
+	return fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchup Matrix - Melee ELO Rankings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%%, #16213e 100%%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #eee;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .back-link {
+            margin-bottom: 1rem;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .matrix-container {
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .matrix-table {
+            width: 100%%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .matrix-table th,
+        .matrix-table td {
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 60px;
+        }
+        
+        .matrix-table th {
+            background: rgba(102, 126, 234, 0.2);
+            font-weight: 600;
+            color: #a0a0a0;
+        }
+        
+        .matrix-table th.row-header {
+            text-align: left;
+            min-width: 120px;
+        }
+        
+        .matrix-table td.empty {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .matrix-table td.cell {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .matrix-table td.cell:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .cell-positive {
+            color: #4ade80;
+            font-weight: 600;
+        }
+        
+        .cell-negative {
+            color: #f87171;
+            font-weight: 600;
+        }
+        
+        .cell-neutral {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        
+        .cell-highlight {
+            color: #667eea;
+        }
+        
+        .tooltip {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-link">
+            <a href="index.html">&larr; Back to Rankings</a>
+        </div>
+        
+        <header>
+            <h1>Matchup Matrix</h1>
+            <p class="subtitle">Win rates between players (min. 2 matches)</p>
+        </header>
+        
+        <p class="last-updated">Last updated: %s</p>
+        
+        <div class="matrix-container">
+            <table class="matrix-table" id="matchupTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        %s
+                    </tr>
+                </thead>
+                <tbody>
+                    %s
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by <a href="https://github.com/melee-elo-ranking">Melee ELO Rankings</a></p>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const cells = document.querySelectorAll('.matrix-table td.cell');
+        
+        cells.forEach(cell => {
+            cell.addEventListener('mouseenter', (e) => {
+                const data = cell.dataset;
+                if (data.matches) {
+                    tooltip.textContent = cell.textContent + ' (' + data.matches + ' matches)';
+                    tooltip.style.display = 'block';
+                }
+            });
+            
+            cell.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.pageX + 10 + 'px';
+                tooltip.style.top = e.pageY + 10 + 'px';
+            });
+            
+            cell.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>`,
+		timestamp,
+		g.generateMatrixHeader(players),
+		g.generateMatrixBody(players, matchupMap),
+	)
+}
+
+func (g *Generator) generateMatrixHeader(players []string) string {
+	header := ""
+	for _, player := range players {
+		shortName := player
+		if len(shortName) > 8 {
+			shortName = shortName[:8] + "."
+		}
+		header += fmt.Sprintf(`<th title="%s">%s</th>`, player, shortName)
+	}
+	return header
+}
+
+func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]map[string]storage.Matchup) string {
+	body := ""
+	for _, player1 := range players {
+		body += "<tr>"
+		body += fmt.Sprintf(`<th class="row-header" title="%s">%s</th>`, player1, player1)
+		for _, player2 := range players {
+			if player1 == player2 {
+				body += `<td class="empty">-</td>`
+			} else {
+				matches := matchupMap[player1][player2]
+				if matches.MatchesPlayed == 0 {
+					body += `<td class="empty">-</td>`
+				} else {
+					cellClass := "cell-neutral"
+					if matches.Player1WinRate >= 60 {
+						cellClass = "cell-positive"
+					} else if matches.Player1WinRate < 40 {
+						cellClass = "cell-negative"
+					}
+					body += fmt.Sprintf(`<td class="cell %s" data-matches="%d" title="%s vs %s: %d-%d">%.0f%%</td>`,
+						cellClass,
+						matches.MatchesPlayed,
+						player1, player2,
+						matches.Player1Wins, matches.Player2Wins,
+						matches.Player1WinRate)
+				}
+			}
+		}
+		body += "</tr>"
+	}
+	return body
 }
