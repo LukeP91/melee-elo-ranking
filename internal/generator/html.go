@@ -842,14 +842,18 @@ func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, player
         .tooltip {
             display: none;
             position: fixed;
-            background: rgba(0, 0, 0, 0.9);
+            background: #667eea;
             color: #fff;
             padding: 0.5rem 0.75rem;
             border-radius: 6px;
             font-size: 0.8rem;
+            font-weight: 600;
             z-index: 1000;
             pointer-events: none;
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translate(-50%%, -100%%);
+            margin-top: -8px;
         }
         
         .footer {
@@ -919,8 +923,8 @@ func (g *Generator) generateMatchupMatrixHTML(matchups []storage.Matchup, player
             });
             
             cell.addEventListener('mousemove', (e) => {
-                tooltip.style.left = e.pageX + 10 + 'px';
-                tooltip.style.top = e.pageY + 10 + 'px';
+                tooltip.style.left = e.pageX + 'px';
+                tooltip.style.top = e.pageY + 'px';
             });
             
             cell.addEventListener('mouseleave', () => {
@@ -974,7 +978,7 @@ func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]m
 					} else if matches.Player1WinRate < 40 {
 						cellClass = "cell-negative"
 					}
-					body += fmt.Sprintf(`<td class="cell %s" data-matches="%d" title="%s vs %s: %d-%d">%.0f%%</td>`,
+					body += fmt.Sprintf(`<td class="cell %s" data-matches="%d" data-detail="%s vs %s: %d-%d">%.0f%%</td>`,
 						cellClass,
 						matches.MatchesPlayed,
 						player1, player2,
