@@ -237,3 +237,86 @@ func (s *Storage) GetRankings() ([]Ranking, error) {
 
 	return rankings, rows.Err()
 }
+
+type PlayerMatch struct {
+	DatePlayed      time.Time
+	TournamentID    int
+	Round           int
+	OpponentName    string
+	PlayerWins      int
+	OpponentWins    int
+	PlayerELOBefore int
+	PlayerELOAfter  int
+	Result          string
+}
+
+func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, error) {
+	query := `
+		SELECT 
+			m.date_played,
+			m.tournament_id,
+			m.round,
+			CASE 
+				WHEN p1.display_name = ? THEN p2.display_name
+				ELSE p1.display_name
+			END as opponent_name,
+			CASE 
+				WHEN p1.display_name = ? THEN m.player1_wins
+				ELSE m.player2_wins
+			END as player_wins,
+			CASE 
+				WHEN p1.display_name = ? THEN m.player2_wins
+				ELSE m.player1_wins
+			END as opponent_wins,
+			CASE 
+				WHEN p1.display_name = ? THEN m.player1_elo_before
+				ELSE m.player2_elo_before
+			END as player_elo_before,
+			CASE 
+				WHEN p1.display_name = ? THEN m.player1_elo_after
+				ELSE m.player2_elo_after
+			END as player_elo_after
+		FROM matches m
+		JOIN players p1 ON m.player1_id = p1.id
+		JOIN players p2 ON m.player2_id = p2.id
+		WHERE p1.display_name = ? OR p2.display_name = ?
+		ORDER BY m.date_played, m.tournament_id, m.round
+	`
+
+	rows, err := s.db.Query(query, displayName, displayName, displayName, displayName, displayName, displayName, displayName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var matches []PlayerMatch
+	for rows.Next() {
+		var m PlayerMatch
+		err := rows.Scan(
+			&m.DatePlayed,
+			&m.TournamentID,
+			&m.Round,
+			&m.OpponentName,
+			&m.PlayerWins,
+			&m.OpponentWins,
+			&m.PlayerELOBefore,
+			&m.PlayerELOAfter,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		// Determine result
+		if m.PlayerWins > m.OpponentWins {
+			m.Result = "Win"
+		} else if m.PlayerWins < m.OpponentWins {
+			m.Result = "Loss"
+		} else {
+			m.Result = "Draw"
+		}
+
+		matches = append(matches, m)
+	}
+
+	return matches, rows.Err()
+}
