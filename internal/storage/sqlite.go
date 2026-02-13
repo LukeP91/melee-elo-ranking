@@ -543,18 +543,27 @@ func (s *Storage) GetPlayerMatchHistory(displayName string) ([]PlayerMatch, erro
 
 func (s *Storage) GetMatchups() ([]Matchup, error) {
 	query := `
+		WITH normalized_matchups AS (
+			SELECT 
+				CASE WHEN p1.display_name < p2.display_name THEN p1.display_name ELSE p2.display_name END as player_a,
+				CASE WHEN p1.display_name < p2.display_name THEN p2.display_name ELSE p1.display_name END as player_b,
+				CASE WHEN p1.display_name < p2.display_name THEN m.player1_wins ELSE m.player2_wins END as wins_a,
+				CASE WHEN p1.display_name < p2.display_name THEN m.player2_wins ELSE m.player1_wins END as wins_b
+			FROM matches m
+			JOIN players p1 ON m.player1_id = p1.id
+			JOIN players p2 ON m.player2_id = p2.id
+			JOIN tournaments t ON m.tournament_id = t.melee_id
+			WHERE t.date IS NOT NULL
+		)
 		SELECT 
-			p1.display_name as player1,
-			p2.display_name as player2,
-			SUM(CASE WHEN m.player1_wins > m.player2_wins THEN 1 ELSE 0 END) as player1_wins,
-			SUM(CASE WHEN m.player2_wins > m.player1_wins THEN 1 ELSE 0 END) as player2_wins,
-			COUNT(*) as match_count
-		FROM matches m
-		JOIN players p1 ON m.player1_id = p1.id
-		JOIN players p2 ON m.player2_id = p2.id
-		GROUP BY p1.display_name, p2.display_name
-		HAVING COUNT(*) >= 2
-		ORDER BY p1.display_name, p2.display_name
+			player_a as player1,
+			player_b as player2,
+			SUM(wins_a) as player1_wins,
+			SUM(wins_b) as player2_wins,
+			SUM(wins_a + wins_b) as match_count
+		FROM normalized_matchups
+		GROUP BY player_a, player_b
+		ORDER BY player_a, player_b
 	`
 
 	rows, err := s.db.Query(query)

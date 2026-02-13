@@ -290,3 +290,78 @@ func TestFullRebuild(t *testing.T) {
 		t.Errorf("expected 0 matches after reset, got %d", playerAfterReset.MatchesPlayed)
 	}
 }
+
+func TestMatchupsCombinedBidirectional(t *testing.T) {
+	store := createTestDB(t)
+	defer store.Close()
+
+	// Use unique external IDs to avoid collisions with other tests
+	alice, _ := store.GetOrCreatePlayer(1001, "TestAlice", "testalice")
+	bob, _ := store.GetOrCreatePlayer(1002, "TestBob", "testbob")
+	charlie, _ := store.GetOrCreatePlayer(1003, "TestCharlie", "testcharlie")
+
+	// Use unique tournament ID to avoid collision with other tests
+	tournamentDate := time.Date(2024, 10, 17, 0, 0, 0, 0, time.UTC)
+	store.GetOrCreateTournament(9999, tournamentDate)
+
+	// Match 1: Alice (p1) vs Bob (p2), Alice wins 2-1
+	store.SaveMatch(Match{
+		ID: "test-match-1", TournamentID: 9999, Round: 1,
+		Player1ID: alice.ID, Player2ID: bob.ID,
+		Player1Wins: 2, Player2Wins: 1,
+	})
+
+	// Match 2: Bob (p1) vs Alice (p2), Bob wins 2-0
+	store.SaveMatch(Match{
+		ID: "test-match-2", TournamentID: 9999, Round: 2,
+		Player1ID: bob.ID, Player2ID: alice.ID,
+		Player1Wins: 2, Player2Wins: 0,
+	})
+
+	// Match 3: Alice (p1) vs Charlie (p2), Alice wins 2-0
+	store.SaveMatch(Match{
+		ID: "test-match-3", TournamentID: 9999, Round: 3,
+		Player1ID: alice.ID, Player2ID: charlie.ID,
+		Player1Wins: 2, Player2Wins: 0,
+	})
+
+	matchups, err := store.GetMatchups()
+	if err != nil {
+		t.Fatalf("failed to get matchups: %v", err)
+	}
+
+	// Find Alice vs Bob matchup (alphabetically Alice < Bob)
+	var aliceBob Matchup
+	for _, m := range matchups {
+		if m.Player1 == "TestAlice" && m.Player2 == "TestBob" {
+			aliceBob = m
+			break
+		}
+	}
+
+	// Match 1: Alice wins 2-1, Match 2: Bob wins 2-0
+	// Total: Alice 2 wins, Bob 3 wins = 5 games
+	if aliceBob.MatchesPlayed != 5 {
+		t.Errorf("expected 5 matches between TestAlice and TestBob, got %d", aliceBob.MatchesPlayed)
+	}
+
+	// Verify winrate
+	// Alice: 2/5 = 40%, Bob: 3/5 = 60%
+	if aliceBob.Player1WinRate != 40.0 {
+		t.Errorf("expected 40%% winrate for Alice, got %.2f%%", aliceBob.Player1WinRate)
+	}
+
+	// Verify single match is included (no minimum threshold)
+	// Alice vs Charlie: Alice won 2-0 = 2 games
+	var aliceCharlie Matchup
+	for _, m := range matchups {
+		if m.Player1 == "TestAlice" && m.Player2 == "TestCharlie" {
+			aliceCharlie = m
+			break
+		}
+	}
+
+	if aliceCharlie.MatchesPlayed != 2 {
+		t.Errorf("expected 2 games between TestAlice and TestCharlie, got %d", aliceCharlie.MatchesPlayed)
+	}
+}

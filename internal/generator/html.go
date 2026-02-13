@@ -962,13 +962,6 @@ func (g *Generator) generateMatrixBody(players []string, matchupMap map[string]m
 				body += `<td class="empty">-</td>`
 			} else {
 				matches, found := matchupMap[player1][player2]
-				if !found {
-					matches, found = matchupMap[player2][player1]
-					if found {
-						matches.Player1Wins, matches.Player2Wins = matches.Player2Wins, matches.Player1Wins
-						matches.Player1WinRate = 100 - matches.Player1WinRate
-					}
-				}
 				if !found || matches.MatchesPlayed == 0 {
 					body += `<td class="empty">-</td>`
 				} else {
